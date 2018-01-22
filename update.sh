@@ -1,7 +1,7 @@
 #!/bin/bash
 
 declare -A composerVersions=(
-    [1.3]="1.3.2"
+    [1.6]="1.6.2"
 )
 
 generated_warning() {
@@ -19,7 +19,7 @@ for composerVersion in ${!composerVersions[@]}; do
     composerFullVersion=${composerVersions[$composerVersion]}
     composerSig=$(wget -q -O - https://composer.github.io/installer.sig); \
 
-    phpVersions=("7.1" "7.0" "5.6")
+    phpVersions=("7.2" "5.6")
 
     for phpVersion in ${phpVersions[@]}; do
         if [ -d "$composerVersion/php$phpVersion" ]; then

@@ -3,23 +3,19 @@
 #
 # PLEASE DO NOT EDIT IT DIRECTLY.
 #
-FROM php:7.1
+FROM php:5.6-alpine
 
 # Install ext-zip
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        zlib1g-dev \
+RUN apk add --update --no-cache --virtual=.ext-zip-deps \
+        coreutils \
+        zlib-dev \
     && docker-php-ext-install -j$(nproc) zip \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-        zlib1g-dev \
-    && apt-get clean \
-    && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
+    && apk del .ext-zip-deps
 
 # Install composer dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apk add --update --no-cache --virtual=.composer-deps \
         git \
-        subversion \
-    && apt-get clean \
-    && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
+        subversion
 
 # Memory Limit
 RUN echo "memory_limit=-1" > $PHP_INI_DIR/conf.d/memory-limit.ini
@@ -42,12 +38,12 @@ RUN set -xe; \
     php -r "copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');"; \
     ACTUAL_SIGNATURE=$(php -r "echo hash_file('SHA384', '/tmp/composer-setup.php');"); \
     \
-    if [ "$ACTUAL_SIGNATURE" != "55d6ead61b29c7bdee5cccfb50076874187bd9f21f65d8991d46ec5cc90518f447387fb9f76ebae1fbbacf329e583e30" ]; then \
+    if [ "$ACTUAL_SIGNATURE" != "544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061" ]; then \
         >&2 echo 'ERROR: Invalid installer signature'; \
         exit 1; \
     fi; \
     \
-    php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer --version="1.3.2"; \
+    php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer --version="1.6.2"; \
     rm /tmp/composer-setup.php
 
 # Install prestissimo

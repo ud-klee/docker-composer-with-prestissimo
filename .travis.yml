@@ -4,17 +4,15 @@ services:
   - docker
 
 env:
-  - VERSION=1.3 VARIANT=php7.1
-  - VERSION=1.3 VARIANT=php7.1/alpine
-  - VERSION=1.3 VARIANT=php7.0
-  - VERSION=1.3 VARIANT=php7.0/alpine
-  - VERSION=1.3 VARIANT=php5.6
-  - VERSION=1.3 VARIANT=php5.6/alpine
+  - VERSION=1.6 VARIANT=php7.2
+  - VERSION=1.6 VARIANT=php7.2/alpine
+  - VERSION=1.6 VARIANT=php5.6
+  - VERSION=1.6 VARIANT=php5.6/alpine
 
 before_script:
   - env | sort
   - cd "$VERSION"
-  - image="marusan10/composer-with-prestissimo:${VERSION}${VARIANT:+-$VARIANT}"
+  - image="ud-klee/composer-with-prestissimo:${VERSION}${VARIANT:+-$VARIANT}"
   - image="${image//'/'/-}"
 
 script:
